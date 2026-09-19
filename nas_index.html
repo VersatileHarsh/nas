@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAS Studio | Noir AtmaSur</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        onyx: {
+                            900: '#060608',
+                            800: '#0A0A0C',
+                            700: '#121216',
+                            600: '#1A1A20',
+                            border: 'rgba(255, 255, 255, 0.08)'
+                        },
+                        accent: {
+                            purple: '#A855F7',
+                            cyan: '#06B6D4',
+                            emerald: '#10B981',
+                            rose: '#F43F5E',
+                            pink: '#EC4899',
+                            amber: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons 6.5.1 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0A0A0C;
+            color: #F3F4F6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 0%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(168, 85, 247, 0.12) 0%, transparent 50%);
+            background-size: 100% 100%, 100% 100%;
+        }
+
+        /* Glassmorphic Dock */
+        .glass-dock {
+            background: rgba(10, 10, 12, 0.88);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--theme-glow, rgba(236, 72, 153, 0.15));
+            transition: box-shadow 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Glassmorphic Search Dropdown */
+        .search-dropdown {
+            background: rgba(18, 18, 22, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Onyx Glass Panel */
+        .onyx-panel {
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Card Hover Effects */
+        .studio-card {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .studio-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Custom Range Input */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            transition: background 0.2s ease;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--theme-color, #EC4899);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+            box-shadow: 0 0 10px var(--theme-color, #EC4899);
+            transition: transform 0.15s ease, background-color 0.3s ease;
+        }
+        input[type=range]:hover::-webkit-slider-thumb {
+            transform: scale(1.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060608;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+        }
+
+        /* Hero Image Mask Blend */
+        .hero-img-mask {
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+        }
+        @media (min-width: 768px) {
+            .hero-img-mask {
+                -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+                mask-image: linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-36 selection:bg-pink-500/30 selection:text-pink-300">
+
+    <!-- Ambient Studio Spotlight background -->
+    <div id="ambientGlow" class="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-gradient-to-b from-pink-600/15 via-purple-600/5 to-transparent pointer-events-none -z-10 blur-[140px] transition-all duration-1000"></div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full flex-grow">
+
+        <header class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 pb-5 border-b border-white/10 relative z-30">
+            
+            <!-- Brand Info -->
+            <div class="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-3">
+                    <!-- Actual NAS Studio Instagram Profile Logo -->
+                    <div class="w-12 h-12 rounded-full bg-black border border-white/25 flex items-center justify-center shadow-lg shadow-pink-500/10 flex-shrink-0 group hover:border-pink-500/50 transition">
+                        <div class="relative flex flex-col items-center justify-center leading-none">
+                            <span class="font-black text-sm tracking-tighter text-white font-sans">NAS</span>
+                            <!-- Music Note Flourish -->
+                            <svg class="w-7 h-2.5 text-white -mt-0.5" viewBox="0 0 28 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 7 C 8 2, 14 9, 20 4 L 20 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                                <ellipse cx="20" cy="7" rx="2" ry="1.4" fill="currentColor"/>
+                                <ellipse cx="25" cy="5" rx="1.8" ry="1.2" fill="currentColor"/>
+                                <path d="M25 5 L 25 1" stroke="currentColor" stroke-width="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-extrabold text-white tracking-wider">NOIR ATMASUR</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Actions -->
+            <div class="flex items-center gap-3 w-full md:w-auto relative">
+                <!-- Search Bar Container -->
+                <div class="relative flex-grow md:w-80" id="searchWrapper">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="Search track, singer..." autocomplete="off" class="w-full pl-9 pr-8 py-2 rounded-2xl bg-onyx-700 border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 transition">
+                        <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- SEARCH RESULTS DROPDOWN (Directly underneath search bar) -->
+                    <div id="searchResultsDropdown" class="hidden absolute left-0 right-0 top-full mt-2 rounded-2xl search-dropdown p-2 z-50 max-h-80 overflow-y-auto space-y-1 border border-white/15">
+                        <!-- Dynamic Search Result Items injected here via JS -->
+                    </div>
+                </div>
+
+                <!-- Instagram Icon Link -->
+                <a href="https://instagram.com/atmasur_noir" target="_blank" title="Instagram" class="w-9 h-9 rounded-2xl bg-white/5 hover:bg-pink-500/20 border border-white/10 text-pink-400 hover:text-pink-300 flex items-center justify-center transition active:scale-95 flex-shrink-0">
+                    <i class="fa-brands fa-instagram text-base"></i>
+                </a>
+            </div>
+        </header>
+
+        <section id="slideshowContainer" class="onyx-panel rounded-3xl mb-8 relative overflow-hidden border border-white/10 shadow-2xl group min-h-[340px] bg-onyx-800 transition-all duration-700">
+            
+            <!-- Dynamic Background Glow -->
+            <div id="slideBgGlow" class="absolute -right-20 -bottom-20 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl pointer-events-none z-0 transition-all duration-700"></div>
+
+            <!-- Slide Wrapper -->
+            <div id="slideContent" class="relative z-10 grid grid-cols-1 md:grid-cols-12 min-h-[340px] transition-all duration-500 ease-in-out opacity-100">
+                
+                <!-- LEFT SIDE: PICTURE WITH MASK BLEND -->
+                <div class="md:col-span-5 relative min-h-[260px] md:min-h-[340px] overflow-hidden">
+                    <img id="slideCover" src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&auto=format&fit=crop&q=80" alt="Slide Artwork" class="hero-img-mask w-full h-full object-cover transition-transform duration-1000 scale-100 group-hover:scale-105">
+                    
+                    <!-- Dynamic Color Tag Badge -->
+                    <span id="slideTag" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border text-[10px] font-bold uppercase tracking-widest shadow-lg z-20 transition-all duration-500 text-purple-300 border-purple-500/40">
+                        Featured Master
+                    </span>
+                </div>
+
+                <!-- RIGHT SIDE: TEXT & METADATA -->
+                <div class="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between relative z-10 bg-transparent">
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span id="slideMetaTag" class="text-[10px] font-bold uppercase tracking-widest text-pink-400">Master Studio Release</span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-white/20"></span>
+                            <span id="slideDuration" class="text-[10px] text-gray-400 font-mono">24-Bit Audio • 03:30</span>
+                        </div>
+
+                        <h2 id="slideTitle" class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none drop-shadow-md">
+                            EK TARFA
+                        </h2>
+
+                        <p id="slideArtist" class="text-xs sm:text-sm font-semibold tracking-wide text-pink-300">
+                            Singer: Noir AtmaSur
+                        </p>
+
+                        <p id="slideDesc" class="text-xs text-gray-300 max-w-lg leading-relaxed line-clamp-3 pt-1">
+                            Official studio production track. High-fidelity master recording produced under Noir AtmaSur label.
+                        </p>
+                    </div>
+
+                    <!-- Slide Actions & Controls -->
+                    <div class="pt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 mt-4">
+                        
+                        <!-- Dynamic Play Button -->
+                        <button id="slidePlayBtn" class="px-6 py-3 rounded-2xl text-white font-extrabold text-xs tracking-wider flex items-center gap-2.5 shadow-xl transition transform active:scale-95 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 shadow-pink-500/20">
+                            <i class="fa-solid fa-play text-xs" id="slidePlayIcon"></i>
+                            <span>LISTEN NOW</span>
+                        </button>
+
+                        <!-- Carousel Dots & Arrows -->
+                        <div class="flex items-center gap-4">
+                            <!-- Dots -->
+                            <div id="slideDots" class="flex items-center gap-1.5">
+                                <!-- Injected dynamically -->
+                            </div>
+
+                            <!-- Arrow Navigation -->
+                            <div class="flex items-center gap-1">
+                                <button id="slidePrevBtn" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center transition border border-white/10 active:scale-90">
+                                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                                </button>
+                                <button id="slideNextBtn" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center transition border border-white/10 active:scale-90">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="flex items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-2 bg-onyx-700/60 p-1.5 rounded-2xl border border-white/5 overflow-x-auto w-full sm:w-auto" id="filterContainer">
+                <button data-cat="all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-pink-600 to-purple-600 shadow-md transition whitespace-nowrap">
+                    All Tracks
+                </button>
+                <button data-cat="singles" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition whitespace-nowrap">
+                    Singles
+                </button>
+                <button data-cat="unreleased" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition whitespace-nowrap">
+                    Unreleased
+                </button>
+                <button data-cat="surkala" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition whitespace-nowrap">
+                    Surkala Releases
+                </button>
+            </div>
+
+            <p class="hidden sm:block text-xs font-mono text-gray-400"><span id="trackCounter" class="text-pink-400 font-bold">6</span> Songs Loaded</p>
+        </section>
+
+        <section class="mb-12">
+            <div id="songsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Cards injected via JavaScript -->
+            </div>
+
+            <!-- No Results Found -->
+            <div id="noResults" class="hidden text-center py-16 text-gray-500">
+                <i class="fa-solid fa-compact-disc text-3xl mb-3 text-pink-400 animate-spin"></i>
+                <p class="text-xs font-medium">No tracks found matching your query.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="w-[96%] max-w-[1800px] mx-auto border-t border-white/15 pt-10 pb-12 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-10 border-b border-white/10">
+            
+            <!-- Col 1: Studio Bio & Socials -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <!-- Actual Circular NAS Studio Logo -->
+                    <div class="w-11 h-11 rounded-full bg-black border border-white/25 flex items-center justify-center shadow-lg shadow-pink-500/10 flex-shrink-0 group hover:border-pink-500/50 transition">
+                        <div class="relative flex flex-col items-center justify-center leading-none">
+                            <span class="font-black text-xs tracking-tighter text-white font-sans">NAS</span>
+                            <!-- Music Note Flourish -->
+                            <svg class="w-6 h-2 text-white -mt-0.5" viewBox="0 0 28 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 7 C 8 2, 14 9, 20 4 L 20 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                                <ellipse cx="20" cy="7" rx="2" ry="1.4" fill="currentColor"/>
+                                <ellipse cx="25" cy="5" rx="1.8" ry="1.2" fill="currentColor"/>
+                                <path d="M25 5 L 25 1" stroke="currentColor" stroke-width="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-white tracking-wider">NOIR ATMASUR</h3>
+                        <p class="text-[10px] text-pink-400 font-medium">Music Production Studio</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Voices with rhythm are known as Surkala. NAS Studio is a dedicated music label and production unit for all independent artists, vocalists, and composers.
+                </p>
+
+                <!-- Social Icons -->
+                <div class="flex items-center gap-2 pt-2">
+                    <a href="https://instagram.com/atmasur_noir" target="_blank" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-400 text-gray-400 flex items-center justify-center transition border border-white/5">
+                        <i class="fa-brands fa-instagram text-xs"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-400 text-gray-400 flex items-center justify-center transition border border-white/5">
+                        <i class="fa-brands fa-youtube text-xs"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-400 text-gray-400 flex items-center justify-center transition border border-white/5">
+                        <i class="fa-brands fa-spotify text-xs"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-400 text-gray-400 flex items-center justify-center transition border border-white/5">
+                        <i class="fa-brands fa-soundcloud text-xs"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Col 2: Navigation & Pages -->
+            <div>
+                <h4 class="text-xs font-extrabold text-white uppercase tracking-wider mb-4 text-pink-400">Studio Pages</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Home Showcase</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Featured Releases</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Artists & Vocalists</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Studio Recording Services</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Audio Mixing & Mastering</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Legal & Guidelines -->
+            <div>
+                <h4 class="text-xs font-extrabold text-white uppercase tracking-wider mb-4 text-pink-400">Legal & Terms</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Copyright Policy</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Music Licensing & Rights</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500/60"></span> Surkala Label FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Demo Submission & Contact -->
+            <div class="space-y-3">
+                <h4 class="text-xs font-extrabold text-white uppercase tracking-wider mb-4 text-pink-400">Demo Drop & Collab</h4>
+                <p class="text-xs text-gray-400">
+                    DM for Music Release, Collaborations, and Promotions.
+                </p>
+                <a href="https://instagram.com/atmasur_noir" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 text-xs font-extrabold text-pink-400 transition active:scale-95">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>DM on Instagram</span>
+                </a>
+                <div class="text-[11px] text-gray-500 font-mono pt-1">
+                    <p><i class="fa-solid fa-envelope mr-1 text-pink-400"></i> contact@atmasurnoir.com</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Copyright & Credits Line -->
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-gray-400">
+            <p>© 2026 <span class="text-white font-bold">Noir AtmaSur (NAS Studio)</span>. All Rights Reserved.</p>
+            <div class="flex items-center gap-4 text-gray-400">
+                <a href="#" class="hover:text-pink-400 transition">Privacy</a>
+                <span>•</span>
+                <a href="#" class="hover:text-pink-400 transition">Terms</a>
+                <span>•</span>
+                <a href="#" class="hover:text-pink-400 transition">Surkala Label</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl glass-dock rounded-3xl p-3 sm:p-4 z-40">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            
+            <!-- LEFT: CURRENT SONG INFO & WAVEFORM CANVAS -->
+            <div class="flex items-center gap-3.5 w-full sm:w-1/3">
+                <div class="relative w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 bg-black/80 border border-pink-500/30 shadow-md">
+                    <img id="playerCover" src="" alt="Cover" class="w-full h-full object-cover">
+                </div>
+
+                <div class="truncate flex-grow">
+                    <h4 id="playerTitle" class="text-xs font-extrabold text-white truncate">Ek Tarfa</h4>
+                    <p id="playerArtist" class="text-[11px] text-pink-400 font-medium truncate mt-0.5">Singer: Noir AtmaSur</p>
+                </div>
+
+                <!-- Live Audio Visualizer Canvas -->
+                <canvas id="visualizerCanvas" width="50" height="20" class="hidden sm:block opacity-80"></canvas>
+            </div>
+
+            <!-- CENTER: PLAYBACK CONTROLS & SEEK BAR -->
+            <div class="flex flex-col items-center gap-1.5 w-full sm:w-1/2">
+                <!-- Controls Row -->
+                <div class="flex items-center gap-6">
+                    <button id="shuffleBtn" class="text-gray-400 hover:text-pink-400 transition text-xs" title="Shuffle">
+                        <i class="fa-solid fa-shuffle"></i>
+                    </button>
+
+                    <button id="prevBtn" class="text-gray-300 hover:text-white transition text-xs active:scale-90">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+
+                    <button id="playBtn" class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white flex items-center justify-center shadow-lg shadow-pink-500/20 transition transform hover:scale-105 active:scale-95">
+                        <i class="fa-solid fa-play ml-0.5 text-xs" id="playIcon"></i>
+                    </button>
+
+                    <button id="nextBtn" class="text-gray-300 hover:text-white transition text-xs active:scale-90">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+
+                    <button id="repeatBtn" class="text-gray-400 hover:text-pink-400 transition text-xs" title="Repeat">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+                </div>
+
+                <!-- Seek Bar -->
+                <div class="w-full flex items-center gap-2.5 text-[10px] text-gray-400 font-mono">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressBar" min="0" max="100" value="0" class="w-full">
+                    <span id="duration">3:30</span>
+                </div>
+            </div>
+
+            <!-- RIGHT: VOLUME CONTROLS -->
+            <div class="hidden sm:flex items-center justify-end gap-3 w-1/5">
+                <button id="muteBtn" class="text-gray-400 hover:text-pink-400 transition text-xs">
+                    <i class="fa-solid fa-volume-high" id="volumeIcon"></i>
+                </button>
+                <input type="range" id="volumeBar" min="0" max="100" value="80" class="w-20">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const songsData = [
+            {
+                id: 0,
+                title: "Ek Tarfa",
+                artist: "Singer: Noir AtmaSur",
+                category: "singles",
+                tag: "Master",
+                keywords: ["ek tarfa", "ektarfa", "tarfa", "atmasur", "noir"],
+                cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&auto=format&fit=crop&q=80",
+                duration: "03:30",
+                durationSec: 210,
+                freq: 220,
+                colorName: "purple",
+                hex: "#A855F7",
+                gradient: "from-purple-600 to-indigo-600",
+                btnGradient: "from-purple-500 to-indigo-600",
+                badgeClass: "text-purple-300 border-purple-500/40 bg-purple-500/20",
+                glowRgb: "168, 85, 247"
+            },
+            {
+                id: 1,
+                title: "Nakhre",
+                artist: "Singer: Noir AtmaSur ft. Hidden Voices",
+                category: "unreleased",
+                tag: "Unreleased",
+                keywords: ["nakhre", "nakhra", "nakra", "nakhe", "hidden voices"],
+                cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+                duration: "02:45",
+                durationSec: 165,
+                freq: 261.63,
+                colorName: "cyan",
+                hex: "#06B6D4",
+                gradient: "from-cyan-500 to-blue-600",
+                btnGradient: "from-cyan-400 to-blue-600",
+                badgeClass: "text-cyan-300 border-cyan-500/40 bg-cyan-500/20",
+                glowRgb: "6, 182, 212"
+            },
+            {
+                id: 2,
+                title: "Hidden Voices",
+                artist: "Singer: Surkala Studio",
+                category: "surkala",
+                tag: "Surkala",
+                keywords: ["hidden voices", "hidden", "voices", "surkala"],
+                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80",
+                duration: "04:12",
+                durationSec: 252,
+                freq: 293.66,
+                colorName: "emerald",
+                hex: "#10B981",
+                gradient: "from-emerald-500 to-teal-600",
+                btnGradient: "from-emerald-400 to-teal-600",
+                badgeClass: "text-emerald-300 border-emerald-500/40 bg-emerald-500/20",
+                glowRgb: "16, 185, 129"
+            },
+            {
+                id: 3,
+                title: "Surkala Anthem",
+                artist: "Singer: NAS Studio",
+                category: "surkala",
+                tag: "Anthem",
+                keywords: ["surkala anthem", "surkala", "anthem", "nas studio"],
+                cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80",
+                duration: "03:15",
+                durationSec: 195,
+                freq: 329.63,
+                colorName: "rose",
+                hex: "#F43F5E",
+                gradient: "from-rose-500 to-orange-500",
+                btnGradient: "from-rose-500 to-orange-500",
+                badgeClass: "text-rose-300 border-rose-500/40 bg-rose-500/20",
+                glowRgb: "244, 63, 94"
+            },
+            {
+                id: 4,
+                title: "Aatma",
+                artist: "Singer: Noir AtmaSur",
+                category: "singles",
+                tag: "Single",
+                keywords: ["aatma", "atma", "atmasur", "noir"],
+                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80",
+                duration: "02:50",
+                durationSec: 170,
+                freq: 246.94,
+                colorName: "pink",
+                hex: "#EC4899",
+                gradient: "from-pink-500 to-purple-600",
+                btnGradient: "from-pink-500 to-purple-600",
+                badgeClass: "text-pink-300 border-pink-500/40 bg-pink-500/20",
+                glowRgb: "236, 72, 153"
+            },
+            {
+                id: 5,
+                title: "Rhythm & Noir",
+                artist: "Singer: NAS All Stars",
+                category: "surkala",
+                tag: "Studio Track",
+                keywords: ["rhythm", "noir", "rhythm and noir", "all stars"],
+                cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&auto=format&fit=crop&q=80",
+                duration: "03:55",
+                durationSec: 235,
+                freq: 349.23,
+                colorName: "amber",
+                hex: "#F59E0B",
+                gradient: "from-amber-500 to-yellow-500",
+                btnGradient: "from-amber-400 to-yellow-500",
+                badgeClass: "text-amber-300 border-amber-500/40 bg-amber-500/20",
+                glowRgb: "245, 158, 11"
+            }
+        ];
+
+        // State Variables
+        let currentIndex = 0;
+        let slideIndex = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let isRepeat = false;
+        let currentSec = 0;
+        let timer = null;
+        let slideTimer = null;
+        let currentCat = 'all';
+        let searchQuery = '';
+
+        // Web Audio Context Synthesizer setup
+        let audioCtx = null;
+        let oscNode = null;
+        let gainNode = null;
+
+        // DOM Elements
+        const songsGrid = document.getElementById('songsGrid');
+        const noResults = document.getElementById('noResults');
+        const trackCounter = document.getElementById('trackCounter');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const searchResultsDropdown = document.getElementById('searchResultsDropdown');
+        const searchWrapper = document.getElementById('searchWrapper');
+
+        // Player Dock Elements
+        const playerTitle = document.getElementById('playerTitle');
+        const playerArtist = document.getElementById('playerArtist');
+        const playerCover = document.getElementById('playerCover');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const repeatBtn = document.getElementById('repeatBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const volumeBar = document.getElementById('volumeBar');
+        const volumeIcon = document.getElementById('volumeIcon');
+
+        // Hero Slideshow Elements
+        const slideshowContainer = document.getElementById('slideshowContainer');
+        const slideContent = document.getElementById('slideContent');
+        const slideCover = document.getElementById('slideCover');
+        const slideTag = document.getElementById('slideTag');
+        const slideMetaTag = document.getElementById('slideMetaTag');
+        const slideDuration = document.getElementById('slideDuration');
+        const slideTitle = document.getElementById('slideTitle');
+        const slideArtist = document.getElementById('slideArtist');
+        const slideDesc = document.getElementById('slideDesc');
+        const slidePlayBtn = document.getElementById('slidePlayBtn');
+        const slidePlayIcon = document.getElementById('slidePlayIcon');
+        const slideDots = document.getElementById('slideDots');
+        const slidePrevBtn = document.getElementById('slidePrevBtn');
+        const slideNextBtn = document.getElementById('slideNextBtn');
+        const slideBgGlow = document.getElementById('slideBgGlow');
+
+        function initAudioCtx() {
+            if (!audioCtx) {
+                const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtxClass) {
+                    audioCtx = new AudioCtxClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSynthTone(freq) {
+            initAudioCtx();
+            if (!audioCtx) return;
+            stopSynthTone();
+            try {
+                oscNode = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                oscNode.type = 'sine';
+                oscNode.frequency.setValueAtTime(freq || 220, audioCtx.currentTime);
+                
+                const vol = (volumeBar ? volumeBar.value : 80) / 100;
+                gainNode.gain.setValueAtTime(vol * 0.08, audioCtx.currentTime);
+                
+                oscNode.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscNode.start();
+            } catch(e) {
+                console.warn("Web Audio exception:", e);
+            }
+        }
+
+        function stopSynthTone() {
+            if (oscNode) {
+                try {
+                    oscNode.stop();
+                    oscNode.disconnect();
+                } catch(e) {}
+                oscNode = null;
+            }
+        }
+
+        // Live Visualizer Canvas
+        const canvas = document.getElementById('visualizerCanvas');
+        const canvasCtx = canvas ? canvas.getContext('2d') : null;
+        let animId = null;
+
+        function drawVisualizer() {
+            if (!canvasCtx || !isPlaying) return;
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+            const bars = 5;
+            const width = canvas.width / bars;
+            const activeColor = songsData[currentIndex]?.hex || '#EC4899';
+
+            for (let i = 0; i < bars; i++) {
+                const h = Math.random() * (canvas.height - 4) + 4;
+                canvasCtx.fillStyle = activeColor;
+                canvasCtx.fillRect(i * width + 2, canvas.height - h, width - 4, h);
+            }
+
+            animId = setTimeout(() => {
+                requestAnimationFrame(drawVisualizer);
+            }, 120);
+        }
+
+        function matchesSearchQuery(song, query) {
+            if (!query) return true;
+            const q = query.toLowerCase().trim();
+            const title = song.title.toLowerCase();
+            const artist = song.artist.toLowerCase();
+            const keywords = (song.keywords || []).map(k => k.toLowerCase());
+
+            // 1. Direct Substring Match
+            if (title.includes(q) || artist.includes(q) || keywords.some(k => k.includes(q))) {
+                return true;
+            }
+
+            // 2. Loose Prefix Match (e.g. "nakhra" vs "nakhre")
+            const qPrefix = q.length >= 3 ? q.slice(0, 4) : q;
+            if (title.startsWith(qPrefix) || keywords.some(k => k.startsWith(qPrefix))) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function updateSearchDropdown(query) {
+            if (!query) {
+                searchResultsDropdown.classList.add('hidden');
+                clearSearchBtn.classList.add('hidden');
+                return;
+            }
+
+            clearSearchBtn.classList.remove('hidden');
+
+            const matches = songsData.filter(s => matchesSearchQuery(s, query));
+            searchResultsDropdown.innerHTML = '';
+
+            if (matches.length === 0) {
+                searchResultsDropdown.innerHTML = `
+                    <div class="px-3 py-3 text-center text-xs text-gray-400">
+                        No matching songs found
+                    </div>
+                `;
+            } else {
+                matches.forEach(song => {
+                    const isNowPlaying = isPlaying && song.id === songsData[currentIndex].id;
+
+                    const item = document.createElement('div');
+                    item.className = "flex items-center justify-between p-2 rounded-xl hover:bg-white/10 cursor-pointer transition group";
+                    
+                    item.innerHTML = `
+                        <!-- Left: Thumbnail Cover Icon -->
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="relative w-10 h-10 rounded-lg overflow-hidden bg-black/80 flex-shrink-0 border border-white/10">
+                                <img src="${song.cover}" alt="${song.title}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                    <i class="fa-solid ${isNowPlaying ? 'fa-pause' : 'fa-play'} text-white text-[10px]"></i>
+                                </div>
+                            </div>
+
+                            <!-- Right Details (Horizontal Flow) -->
+                            <div class="truncate">
+                                <div class="flex items-center gap-2 truncate">
+                                    <h5 class="text-xs font-bold text-white group-hover:text-pink-400 transition truncate">${song.title}</h5>
+                                    <span class="text-[9px] px-1.5 py-0.2 rounded border ${song.badgeClass} flex-shrink-0">${song.tag}</span>
+                                </div>
+                                <p class="text-[10px] text-gray-400 truncate mt-0.5">${song.artist}</p>
+                            </div>
+                        </div>
+
+                        <!-- Track Duration -->
+                        <div class="flex items-center gap-2 pl-2 flex-shrink-0">
+                            <span class="text-[10px] font-mono text-gray-400">${song.duration}</span>
+                            <div class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition">
+                                <i class="fa-solid ${isNowPlaying ? 'fa-pause' : 'fa-play'} text-[9px]"></i>
+                            </div>
+                        </div>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        const idx = songsData.findIndex(s => s.id === song.id);
+                        currentIndex = idx;
+                        loadSong(currentIndex);
+                        playSong();
+                        searchResultsDropdown.classList.add('hidden');
+                    });
+
+                    searchResultsDropdown.appendChild(item);
+                });
+            }
+
+            searchResultsDropdown.classList.remove('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (searchWrapper && !searchWrapper.contains(e.target)) {
+                searchResultsDropdown.classList.add('hidden');
+            }
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            updateSearchDropdown('');
+            renderGrid();
+        });
+
+        function renderGrid() {
+            songsGrid.innerHTML = '';
+
+            const filtered = songsData.filter(s => {
+                const matchCat = currentCat === 'all' || s.category === currentCat;
+                const matchSearch = matchesSearchQuery(s, searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            trackCounter.innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(song => {
+                const isActive = song.id === songsData[currentIndex].id;
+
+                const card = document.createElement('div');
+                card.className = `onyx-panel rounded-2xl p-3 studio-card cursor-pointer flex flex-col justify-between group ${
+                    isActive ? 'border-2 bg-white/5' : 'border-white/5'
+                }`;
+                if (isActive) {
+                    card.style.borderColor = song.hex;
+                    card.style.boxShadow = `0 10px 30px -10px rgba(${song.glowRgb}, 0.3)`;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Square Artwork -->
+                        <div class="relative w-full aspect-square rounded-xl overflow-hidden mb-3 bg-black/80 border border-white/10">
+                            <img src="${song.cover}" alt="${song.title}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                            
+                            <!-- Studio Tag -->
+                            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-[9px] font-bold border ${song.badgeClass}">
+                                ${song.tag}
+                            </span>
+
+                            <!-- Floating Hover Overlay Play Button -->
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-200 flex items-center justify-center">
+                                <div class="w-10 h-10 rounded-full text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition bg-gradient-to-r ${song.btnGradient}">
+                                    <i class="fa-solid ${isActive && isPlaying ? 'fa-pause' : 'fa-play ml-0.5'} text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Song Info -->
+                        <h3 class="font-extrabold text-xs text-white truncate transition" style="color: ${isActive ? song.hex : ''}">
+                            ${song.title}
+                        </h3>
+
+                        <p class="text-[11px] text-gray-400 mt-1 truncate font-medium">
+                            ${song.artist}
+                        </p>
+                    </div>
+
+                    <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-gray-500 font-mono">
+                        <span>${song.duration}</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (songsData[currentIndex].id === song.id) {
+                        togglePlay();
+                    } else {
+                        const idx = songsData.findIndex(s => s.id === song.id);
+                        currentIndex = idx;
+                        loadSong(currentIndex);
+                        playSong();
+                    }
+                });
+
+                songsGrid.appendChild(card);
+            });
+        }
+
+        function loadSong(index) {
+            const song = songsData[index];
+            playerTitle.innerText = song.title;
+            playerArtist.innerText = song.artist;
+            playerArtist.style.color = song.hex;
+            playerCover.src = song.cover;
+
+            // Apply Theme CSS variables
+            document.documentElement.style.setProperty('--theme-color', song.hex);
+            document.documentElement.style.setProperty('--theme-glow', `rgba(${song.glowRgb}, 0.25)`);
+
+            // Apply Dynamic Play Button Gradient
+            playBtn.className = `w-10 h-10 rounded-full text-white flex items-center justify-center shadow-lg transition transform hover:scale-105 active:scale-95 bg-gradient-to-r ${song.btnGradient}`;
+            playBtn.style.boxShadow = `0 8px 25px rgba(${song.glowRgb}, 0.4)`;
+
+            durationEl.innerText = song.duration;
+            currentSec = 0;
+            progressBar.value = 0;
+            currentTimeEl.innerText = "0:00";
+            
+            if (slideIndex === index) {
+                updateSlideUI(index);
+            }
+            renderGrid();
+        }
+
+        function updateSlideUI(index) {
+            const song = songsData[index];
+            if (!song) return;
+
+            slideContent.classList.add('opacity-0');
+
+            setTimeout(() => {
+                slideCover.src = song.cover;
+                slideTag.innerText = song.tag || "Featured";
+                slideTag.className = `absolute top-4 left-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border text-[10px] font-bold uppercase tracking-widest shadow-lg z-20 transition-all duration-500 ${song.badgeClass}`;
+
+                slideMetaTag.innerText = `${song.tag || 'Master'} Studio Release`;
+                slideMetaTag.style.color = song.hex;
+
+                slideTitle.innerText = song.title;
+                slideArtist.innerText = song.artist;
+                slideArtist.style.color = song.hex;
+
+                slideDuration.innerText = `24-Bit Audio • ${song.duration}`;
+                slideDesc.innerText = `Official ${song.tag || 'Studio'} release produced under NAS (Noir AtmaSur) Music Production Studio label.`;
+
+                slidePlayBtn.className = `px-6 py-3 rounded-2xl text-white font-extrabold text-xs tracking-wider flex items-center gap-2.5 shadow-xl transition transform active:scale-95 bg-gradient-to-r ${song.btnGradient}`;
+                slidePlayBtn.style.boxShadow = `0 10px 30px rgba(${song.glowRgb}, 0.35)`;
+
+                slideBgGlow.style.backgroundColor = song.hex;
+
+                if (currentIndex === index && isPlaying) {
+                    slidePlayIcon.className = "fa-solid fa-pause text-xs";
+                } else {
+                    slidePlayIcon.className = "fa-solid fa-play text-xs";
+                }
+
+                renderDots();
+                slideContent.classList.remove('opacity-0');
+            }, 250);
+        }
+
+        function renderDots() {
+            slideDots.innerHTML = '';
+            songsData.forEach((song, idx) => {
+                const dot = document.createElement('button');
+                const isCur = idx === slideIndex;
+                dot.className = `h-2 rounded-full transition-all duration-300 ${
+                    isCur ? 'w-6 shadow-md' : 'w-2 bg-white/20 hover:bg-white/50'
+                }`;
+                if (isCur) {
+                    dot.style.backgroundColor = song.hex;
+                    dot.style.boxShadow = `0 0 10px ${song.hex}`;
+                }
+                dot.addEventListener('click', () => {
+                    slideIndex = idx;
+                    updateSlideUI(slideIndex);
+                    resetSlideTimer();
+                });
+                slideDots.appendChild(dot);
+            });
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % songsData.length;
+            updateSlideUI(slideIndex);
+        }
+
+        function prevSlide() {
+            slideIndex = (slideIndex - 1 + songsData.length) % songsData.length;
+            updateSlideUI(slideIndex);
+        }
+
+        function startSlideTimer() {
+            stopSlideTimer();
+            slideTimer = setInterval(nextSlide, 5000);
+        }
+
+        function stopSlideTimer() {
+            if (slideTimer) clearInterval(slideTimer);
+        }
+
+        function resetSlideTimer() {
+            stopSlideTimer();
+            startSlideTimer();
+        }
+
+        slideNextBtn.addEventListener('click', () => {
+            nextSlide();
+            resetSlideTimer();
+        });
+
+        slidePrevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetSlideTimer();
+        });
+
+        slidePlayBtn.addEventListener('click', () => {
+            if (currentIndex === slideIndex) {
+                togglePlay();
+            } else {
+                currentIndex = slideIndex;
+                loadSong(currentIndex);
+                playSong();
+            }
+            updateSlideUI(slideIndex);
+        });
+
+        slideshowContainer.addEventListener('mouseenter', stopSlideTimer);
+        slideshowContainer.addEventListener('mouseleave', startSlideTimer);
+
+        function playSong() {
+            isPlaying = true;
+            playIcon.className = "fa-solid fa-pause text-xs";
+            playSynthTone(songsData[currentIndex].freq);
+            startTimer();
+            drawVisualizer();
+            updateSlideUI(slideIndex);
+            renderGrid();
+        }
+
+        function pauseSong() {
+            isPlaying = false;
+            playIcon.className = "fa-solid fa-play ml-0.5 text-xs";
+            stopSynthTone();
+            stopTimer();
+            if (animId) clearTimeout(animId);
+            if (canvasCtx) canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+            updateSlideUI(slideIndex);
+            renderGrid();
+        }
+
+        function togglePlay() {
+            if (isPlaying) pauseSong();
+            else playSong();
+        }
+
+        function nextSong() {
+            if (isShuffle) {
+                currentIndex = Math.floor(Math.random() * songsData.length);
+            } else {
+                currentIndex = (currentIndex + 1) % songsData.length;
+            }
+            loadSong(currentIndex);
+            if (isPlaying) playSong();
+        }
+
+        function prevSong() {
+            if (currentSec > 4) {
+                currentSec = 0;
+            } else {
+                currentIndex = (currentIndex - 1 + songsData.length) % songsData.length;
+            }
+            loadSong(currentIndex);
+            if (isPlaying) playSong();
+        }
+
+        function startTimer() {
+            stopTimer();
+            timer = setInterval(() => {
+                if (isPlaying) {
+                    const total = songsData[currentIndex].durationSec;
+                    currentSec++;
+
+                    if (currentSec >= total) {
+                        if (isRepeat) {
+                            currentSec = 0;
+                        } else {
+                            nextSong();
+                            return;
+                        }
+                    }
+
+                    progressBar.value = (currentSec / total) * 100;
+                    currentTimeEl.innerText = formatTime(currentSec);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timer) clearInterval(timer);
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Playback Events
+        playBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+
+        shuffleBtn.addEventListener('click', () => {
+            isShuffle = !isShuffle;
+            shuffleBtn.classList.toggle('text-pink-400', isShuffle);
+            shuffleBtn.classList.toggle('text-gray-400', !isShuffle);
+        });
+
+        repeatBtn.addEventListener('click', () => {
+            isRepeat = !isRepeat;
+            repeatBtn.classList.toggle('text-pink-400', isRepeat);
+            repeatBtn.classList.toggle('text-gray-400', !isRepeat);
+        });
+
+        progressBar.addEventListener('input', (e) => {
+            const total = songsData[currentIndex].durationSec;
+            currentSec = Math.floor((e.target.value / 100) * total);
+            currentTimeEl.innerText = formatTime(currentSec);
+        });
+
+        volumeBar.addEventListener('input', (e) => {
+            const v = e.target.value;
+            if (gainNode && audioCtx) {
+                gainNode.gain.setValueAtTime((v / 100) * 0.08, audioCtx.currentTime);
+            }
+            if (v == 0) volumeIcon.className = "fa-solid fa-volume-xmark";
+            else if (v < 50) volumeIcon.className = "fa-solid fa-volume-low";
+            else volumeIcon.className = "fa-solid fa-volume-high";
+        });
+
+        // Search & Category Tabs
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            updateSearchDropdown(searchQuery);
+            renderGrid();
+        });
+
+        searchInput.addEventListener('focus', (e) => {
+            if (e.target.value.trim()) {
+                updateSearchDropdown(e.target.value.trim());
+            }
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition whitespace-nowrap";
+                });
+                e.target.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-pink-600 to-purple-600 shadow-md transition whitespace-nowrap";
+                currentCat = e.target.getAttribute('data-cat');
+                renderGrid();
+            });
+        });
+
+        // Initialize Application
+        window.onload = () => {
+            loadSong(0);
+            updateSlideUI(0);
+            startSlideTimer();
+        };
+    </script>
+</body>
+</html>
